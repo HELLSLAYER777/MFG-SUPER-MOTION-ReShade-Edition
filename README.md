@@ -1,3 +1,11 @@
+ADAPTIVE MOTION LEARNING
+
+<img width="1847" height="681" alt="image" src="https://github.com/user-attachments/assets/9bc3d5e4-e1fd-4ace-bc13-77a7be953278" />
+
+<img width="836" height="439" alt="image" src="https://github.com/user-attachments/assets/8a78bdc7-3028-4029-82b5-9795cb1dfb8e" />
+
+<img width="726" height="406" alt="image" src="https://github.com/user-attachments/assets/21ca39a2-0753-462c-bc09-2aa1c56c94ac" />
+
 ## License & Copyright
 
 Copyright © 2026 **NODIX-TECH**
