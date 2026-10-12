@@ -1,0 +1,445 @@
+<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="using:ARMO.Controls" xmlns:vm="using:ARMO.ViewModels" x:Class="ARMO.Views.MainWindow" x:DataType="vm:MainViewModel"
+        Title="MFG SUPER MOTION" Icon="/Assets/armo.ico" Width="1254" Height="782" MinWidth="600" MinHeight="420"
+        WindowStartupLocation="CenterScreen" WindowDecorations="Full" ExtendClientAreaToDecorationsHint="False"
+        Background="Transparent" TransparencyBackgroundFallback="{DynamicResource CanvasBrush}"
+        CanResize="True">
+  <Border Name="WindowShell" ClipToBounds="True">
+  <Grid>
+    <Grid ColumnDefinitions="Auto,*" IsEnabled="{Binding !IsDialogOpen}">
+      <Border Name="Sidebar" BorderBrush="{DynamicResource LineBrush}">
+        <ScrollViewer Name="SidebarScroll" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <Grid RowDefinitions="Auto,Auto,Auto,*,Auto,Auto,Auto" Height="{Binding #SidebarScroll.Bounds.Height}" MinHeight="390">
+          <StackPanel Spacing="4">
+            <Button Name="DisplayNav" Classes="nav utility" Classes.active="{Binding IsDisplay}" Command="{Binding DisplayCommand}" AutomationProperties.Name="Super Motion">
+              <Grid ColumnDefinitions="16,*"><Path Classes="nav-icon" Data="{StaticResource DisplayIcon}" /><TextBlock Grid.Column="1" Text="Super Motion" Margin="10,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" /></Grid>
+            </Button>
+            <Button Name="SupportNav" Classes="nav utility" Classes.active="{Binding IsSupport}" Command="{Binding SupportCommand}" AutomationProperties.Name="{Binding Text.Support}">
+              <Grid ColumnDefinitions="16,*"><Path Classes="nav-icon" Data="{StaticResource SupportIcon}" /><TextBlock Grid.Column="1" Text="{Binding Text.Support}" Margin="10,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" /></Grid>
+            </Button>
+          </StackPanel>
+          <Border Grid.Row="1" Height="1" Margin="6,18,6,14" Background="{DynamicResource LineBrush}" />
+          <TextBlock Grid.Row="2" Classes="muted" Text="{Binding Text.Profiles}" Margin="10,0,0,10" FontSize="13" />
+          <ListBox Grid.Row="3" Classes="profiles" ItemsSource="{Binding Profiles}" SelectedItem="{Binding SelectedProfile, Mode=TwoWay}" AutomationProperties.Name="{Binding Text.Profiles}">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:ProfileItem">
+                <Grid ColumnDefinitions="3,*" MinHeight="34">
+                  <Border Classes="profile-marker" Width="3" Margin="0,8,0,8" CornerRadius="1" Background="{DynamicResource AccentBrush}" />
+                  <TextBlock Grid.Column="1" Text="{Binding Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="16,0,8,0" FontSize="14" />
+                </Grid>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+          <Grid Grid.Row="4" ColumnDefinitions="*,50,50,38" Margin="2,12,2,0">
+            <Button Classes="icon primary" Command="{Binding AddCommand}" Margin="0,0,12,0" ToolTip.Tip="{Binding Text.Add}" AutomationProperties.Name="{Binding Text.Add}"><PathIcon Data="M 11,2 L 13,2 L 13,11 L 22,11 L 22,13 L 13,13 L 13,22 L 11,22 L 11,13 L 2,13 L 2,11 L 11,11 Z" /></Button>
+            <Button Grid.Column="1" Classes="icon" Command="{Binding ResetCommand}" Margin="0,0,12,0" ToolTip.Tip="{Binding Text.Reset}" AutomationProperties.Name="{Binding Text.Reset}"><PathIcon Data="M 12,4 A 8,8 0 1 1 4.6,9 L 6.5,9.7 A 6,6 0 1 0 12,6 L 12,9 L 7,5 L 12,1 Z" /></Button>
+            <Button Grid.Column="2" Classes="icon" Command="{Binding RenameCommand}" Margin="0,0,12,0" ToolTip.Tip="{Binding Text.Rename}" AutomationProperties.Name="{Binding Text.Rename}"><PathIcon Data="M 16,2 L 22,8 L 8,22 L 2,22 L 2,16 Z M 16,5 L 5,17 L 5,19 L 7,19 L 19,8 Z" /></Button>
+            <Button Grid.Column="3" Classes="icon" Command="{Binding DeleteCommand}" ToolTip.Tip="{Binding Text.Delete}" AutomationProperties.Name="{Binding Text.Delete}"><PathIcon Data="M 8,2 L 16,2 L 16,4 L 8,4 Z M 3,6 L 21,6 L 21,8 L 19,8 L 18,22 L 6,22 L 5,8 L 3,8 Z M 7,8 L 8,20 L 16,20 L 17,8 Z M 10,10 L 11,10 L 11,18 L 10,18 Z M 13,10 L 14,10 L 14,18 L 13,18 Z" /></Button>
+          </Grid>
+          <Border Grid.Row="5" Height="1" Margin="6,10,6,14" Background="{DynamicResource LineBrush}" />
+          <StackPanel Grid.Row="6" Spacing="8">
+            <Button Name="SettingsNav" Classes="nav utility" Classes.active="{Binding IsSettings}" Command="{Binding SettingsCommand}" AutomationProperties.Name="{Binding Text.Settings}">
+              <Grid ColumnDefinitions="16,*"><Path Classes="nav-icon" Data="{StaticResource SettingsIcon}" /><TextBlock Grid.Column="1" Text="{Binding Text.Settings}" Margin="10,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" /></Grid>
+            </Button>
+            <Button Name="HelpNav" Classes="nav utility" Classes.active="{Binding IsHelp}" Command="{Binding HelpCommand}" AutomationProperties.Name="{Binding Text.Help}">
+              <Grid ColumnDefinitions="16,*"><Path Classes="nav-icon" Data="{StaticResource HelpIcon}" /><TextBlock Grid.Column="1" Text="{Binding Text.Help}" Margin="10,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" /></Grid>
+            </Button>
+          </StackPanel>
+        </Grid>
+        </ScrollViewer>
+      </Border>
+      <Border Name="Workspace" Grid.Column="1" />
+      <ScrollViewer Name="ContentScroll" Grid.Column="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <StackPanel Name="ContentStack" Spacing="12">
+          <Border Name="AppUpdateBanner" IsVisible="{Binding HasAppUpdate}" Background="{DynamicResource SelectionBrush}" CornerRadius="12" Padding="16">
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Text="{Binding AppUpdateText}" TextWrapping="Wrap" FontSize="13" VerticalAlignment="Center" Margin="0,0,16,0" />
+              <Button Grid.Column="1" Classes="primary" Content="{Binding Text.Download}" Command="{Binding OpenLinkCommand}" CommandParameter="app-releases" />
+            </Grid>
+          </Border>
+          <Border IsVisible="{Binding HasSaveError}" Background="{DynamicResource SelectionBrush}" CornerRadius="12" Padding="16">
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Text="{Binding Text.SaveFailed}" TextWrapping="Wrap" FontSize="13" VerticalAlignment="Center" Margin="0,0,16,0" />
+              <Button Grid.Column="1" Content="{Binding Text.Save}" Command="{Binding RetrySaveCommand}" />
+            </Grid>
+          </Border>
+        <Panel>
+          <Grid Name="DisplayCards" IsVisible="{Binding IsDisplay}" ColumnDefinitions="*" RowDefinitions="Auto,Auto,Auto">
+            <Border Name="FrameGenerationCard" Classes="card">
+              <StackPanel Spacing="4">
+                <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,10">
+                  <TextBlock Classes="heading" Text="{Binding Text.FrameGeneration}" Margin="0" VerticalAlignment="Center" />
+                  <Button Name="StartMotionButton" Grid.Column="1" Classes="primary motion" Classes.waiting="{Binding IsMotionWaiting}" Classes.running="{Binding IsMotionRunning}" Content="{Binding MotionButtonText}"
+                          Command="{Binding MotionCommand}" ToolTip.Tip="{Binding ShortcutLabel}" AutomationProperties.Name="{Binding MotionButtonText}" />
+                </Grid>
+                <TextBlock Name="MotionStatus" Classes="muted" Text="{Binding StatusText}" IsVisible="{Binding HasStatus}" Margin="0,0,0,6" />
+                <TextBlock Name="MotionNote" Classes="muted" Text="{Binding StatusNote}" IsVisible="{Binding HasStatusNote}" Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,6" />
+                <ui:SettingRow>
+                  <TextBlock Classes="row-label" Text="{Binding GeneratorName}" />
+                  <Border Classes="row-control"><ToggleButton Theme="{StaticResource ArmoSwitch}" IsChecked="{Binding FrameGenerationEnabled, Mode=TwoWay}" HorizontalAlignment="Right" AutomationProperties.Name="{Binding GeneratorName}" /></Border>
+                </ui:SettingRow>
+                <ui:SettingRow>
+                  <TextBlock Classes="row-label" Text="{Binding Text.Generator}" />
+                  <ComboBox Classes="row-control" ItemsSource="{Binding Generators}" SelectedIndex="{Binding GeneratorIndex, Mode=TwoWay}" IsEnabled="{Binding !IsMotionActive}" AutomationProperties.Name="{Binding Text.Generator}" FlowDirection="LeftToRight" />
+                </ui:SettingRow>
+                <ui:SettingRow>
+                  <TextBlock Classes="row-label" Text="{Binding Text.Mode}" />
+                  <ComboBox Classes="row-control" ItemsSource="{Binding Modes}" SelectedIndex="{Binding ModeIndex, Mode=TwoWay}" IsEnabled="{Binding FrameGenerationEnabled}" AutomationProperties.Name="{Binding Text.Mode}" FlowDirection="LeftToRight" />
+                </ui:SettingRow>
+                <ui:SettingRow>
+                  <TextBlock Classes="row-label" Text="{Binding Text.GameType}" />
+                  <ComboBox Classes="row-control" ItemsSource="{Binding GameTypes}" SelectedIndex="{Binding GameTypeIndex, Mode=TwoWay}" IsEnabled="{Binding IsMotionPrecisionOpen}" AutomationProperties.Name="{Binding Text.GameType}">
+                    <ComboBox.ItemTemplate><DataTemplate x:DataType="vm:ChoiceItem"><TextBlock Text="{Binding Label}" /></DataTemplate></ComboBox.ItemTemplate>
+                  </ComboBox>
+                </ui:SettingRow>
+                <ui:SettingRow>
+                  <TextBlock Classes="row-label" Text="{Binding Text.AdaptiveLearning}" />
+                  <StackPanel Classes="row-control" Orientation="Horizontal" Spacing="12">
+                    <TextBlock Name="LearningStatus" Classes="muted" Text="{Binding LearningStatus}" VerticalAlignment="Center" />
+                    <ToggleButton Theme="{StaticResource ArmoSwitch}" IsChecked="{Binding AdaptiveLearningEnabled, Mode=TwoWay}" AutomationProperties.Name="{Binding Text.AdaptiveLearning}" />
+                  </StackPanel>
+                </ui:SettingRow>
+                <ui:SettingRow>
+                  <TextBlock Classes="row-label" Text="{Binding Text.Flow}" />
+                  <Grid Classes="row-control" ColumnDefinitions="*,48" FlowDirection="LeftToRight">
+                    <Slider Theme="{StaticResource ArmoSlider}" Minimum="25" Maximum="100" TickFrequency="5" Value="{Binding Flow, Mode=TwoWay}" IsEnabled="{Binding IsFlowOpen}" AutomationProperties.Name="{Binding Text.Flow}" />
+                    <TextBlock Grid.Column="1" Classes="percentage" Text="{Binding FlowLabel}" />
+                  </Grid>
+                </ui:SettingRow>
+              </StackPanel>
+            </Border>
+            <Border Name="UpscalingCard" Grid.Row="1" Classes="card" Margin="0,12,0,0">
+              <StackPanel Spacing="4">
+                <TextBlock Classes="heading" Text="{Binding Text.Upscaling}" />
+                <ui:SettingRow>
+                  <TextBlock Classes="row-label" Text="{Binding Text.Upscaler}" />
+                  <ComboBox Classes="row-control" ItemsSource="{Binding Upscalers}" SelectedIndex="{Binding UpscalerIndex, Mode=TwoWay}" AutomationProperties.Name="{Binding Text.Upscaler}" FlowDirection="LeftToRight">
+                    <ComboBox.ItemTemplate><DataTemplate x:DataType="vm:ChoiceItem"><TextBlock Text="{Binding Label}" /></DataTemplate></ComboBox.ItemTemplate>
+                  </ComboBox>
+                </ui:SettingRow>
+                <ui:SettingRow>
+                  <TextBlock Classes="row-label" Text="{Binding Text.Sharpness}" />
+                  <Grid Classes="row-control" ColumnDefinitions="*,48" FlowDirection="LeftToRight">
+                    <Slider Theme="{StaticResource ArmoSlider}" Value="{Binding Sharpness, Mode=TwoWay}" IsEnabled="{Binding IsSharpnessOpen}" AutomationProperties.Name="{Binding Text.Sharpness}" />
+                    <TextBlock Grid.Column="1" Classes="percentage" Text="{Binding SharpnessLabel}" />
+                  </Grid>
+                </ui:SettingRow>
+                <ui:SettingRow>
+                  <TextBlock Classes="row-label" Text="{Binding Text.OverSharpness}" />
+                  <Grid Classes="row-control" ColumnDefinitions="*,48" FlowDirection="LeftToRight">
+                    <Slider Theme="{StaticResource ArmoSlider}" Value="{Binding OverSharpness, Mode=TwoWay}" IsEnabled="{Binding IsOverSharpnessOpen}" AutomationProperties.Name="{Binding Text.OverSharpness}" />
+                    <TextBlock Grid.Column="1" Classes="percentage" Text="{Binding OverSharpnessLabel}" />
+                  </Grid>
+                </ui:SettingRow>
+              </StackPanel>
+            </Border>
+            <Border Name="AdvancedCard" Grid.Row="2" Margin="0,12,0,0" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="1" CornerRadius="12" ClipToBounds="True">
+              <StackPanel>
+                <ToggleButton Name="AdvancedToggle" Theme="{StaticResource AdvancedButton}" IsChecked="{Binding IsAdvancedOpen, Mode=TwoWay}" AutomationProperties.Name="{Binding Text.Advanced}">
+                  <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="{Binding Text.Advanced}" /><PathIcon Name="AdvancedArrow" Width="18" Height="12" Data="M 0,0 L 2,0 L 10,8 L 18,0 L 20,0 L 10,10 Z" /></StackPanel>
+                </ToggleButton>
+                <StackPanel Name="AdvancedRows" IsVisible="{Binding IsAdvancedOpen}" Margin="20,4,20,18" Spacing="12">
+                  <ui:GroupFlow>
+                    <Border Classes="group">
+                      <StackPanel Spacing="4">
+                        <TextBlock Classes="group-title" Text="{Binding Text.GroupPacing}" />
+                        <ui:SettingRow>
+                          <TextBlock Classes="row-label" Text="{Binding Text.QueueTarget}" />
+                          <ComboBox Classes="row-control" ItemsSource="{Binding QueueTargets}" SelectedIndex="{Binding QueueTargetIndex, Mode=TwoWay}" AutomationProperties.Name="{Binding Text.QueueTarget}" FlowDirection="LeftToRight" />
+                        </ui:SettingRow>
+                        <ui:SettingRow>
+                          <TextBlock Classes="row-label" Text="{Binding Text.FrameLimit}" />
+                          <Grid Classes="row-control" ColumnDefinitions="*,48" FlowDirection="LeftToRight">
+                            <Slider Theme="{StaticResource ArmoSlider}" Minimum="0" Maximum="360" Value="{Binding FrameLimit, Mode=TwoWay}" AutomationProperties.Name="{Binding Text.FrameLimit}" />
+                            <TextBlock Grid.Column="1" Classes="percentage" Text="{Binding FrameLimitLabel}" />
+                          </Grid>
+                        </ui:SettingRow>
+                        <ui:SettingRow>
+                          <TextBlock Classes="row-label" Text="{Binding Text.ScreenLimit}" />
+                          <Border Classes="row-control"><ToggleButton Theme="{StaticResource ArmoSwitch}" IsChecked="{Binding LimitToScreenEnabled, Mode=TwoWay}" HorizontalAlignment="Right" AutomationProperties.Name="{Binding Text.ScreenLimit}" /></Border>
+                        </ui:SettingRow>
+                        <ui:SettingRow>
+                          <TextBlock Classes="row-label" Text="{Binding Text.LowLatency}" />
+                          <Border Classes="row-control"><ToggleButton Theme="{StaticResource ArmoSwitch}" IsChecked="{Binding LowLatencyEnabled, Mode=TwoWay}" HorizontalAlignment="Right" AutomationProperties.Name="{Binding Text.LowLatency}" /></Border>
+                        </ui:SettingRow>
+                      </StackPanel>
+                    </Border>
+                    <Border Classes="group">
+                      <StackPanel Spacing="4">
+                        <TextBlock Classes="group-title" Text="{Binding Text.Display}" />
+                        <ui:SettingRow>
+                          <TextBlock Classes="row-label" Text="VRR" />
+                          <Border Classes="row-control"><ToggleButton Theme="{StaticResource ArmoSwitch}" IsChecked="{Binding VrrEnabled, Mode=TwoWay}" HorizontalAlignment="Right" AutomationProperties.Name="VRR" /></Border>
+                        </ui:SettingRow>
+                        <ui:SettingRow>
+                          <TextBlock Classes="row-label" Text="{Binding Text.SyncMode}" />
+                          <ComboBox Classes="row-control" ItemsSource="{Binding SyncModes}" SelectedIndex="{Binding SyncModeIndex, Mode=TwoWay}" IsEnabled="{Binding !VrrEnabled}" AutomationProperties.Name="{Binding Text.SyncMode}">
+                            <ComboBox.ItemTemplate><DataTemplate x:DataType="vm:ChoiceItem"><TextBlock Text="{Binding Label}" /></DataTemplate></ComboBox.ItemTemplate>
+                          </ComboBox>
+                        </ui:SettingRow>
+                        <ui:SettingRow>
+                          <TextBlock Classes="row-label" Text="HDR" />
+                          <Border Classes="row-control"><ToggleButton Theme="{StaticResource ArmoSwitch}" IsChecked="{Binding HdrEnabled, Mode=TwoWay}" HorizontalAlignment="Right" AutomationProperties.Name="HDR" /></Border>
+                        </ui:SettingRow>
+                        <ui:SettingRow>
+                          <TextBlock Classes="row-label" Text="{Binding Text.FpsCounter}" />
+                          <Border Classes="row-control"><ToggleButton Theme="{StaticResource ArmoSwitch}" IsChecked="{Binding FpsCounterEnabled, Mode=TwoWay}" HorizontalAlignment="Right" AutomationProperties.Name="{Binding Text.FpsCounter}" /></Border>
+                        </ui:SettingRow>
+                      </StackPanel>
+                    </Border>
+                    <Border Classes="group">
+                      <StackPanel Spacing="4">
+                        <TextBlock Classes="group-title" Text="{Binding Text.GroupMotion}" />
+                        <ui:SettingRow IsVisible="{Binding IsDlss}">
+                          <TextBlock Classes="row-label" Text="{Binding Text.MotionSource}" />
+                          <ComboBox Classes="row-control" ItemsSource="{Binding MotionSources}" SelectedIndex="{Binding MotionSourceIndex, Mode=TwoWay}" AutomationProperties.Name="{Binding Text.MotionSource}">
+                            <ComboBox.ItemTemplate><DataTemplate x:DataType="vm:ChoiceItem"><TextBlock Text="{Binding Label}" /></DataTemplate></ComboBox.ItemTemplate>
+                          </ComboBox>
+                        </ui:SettingRow>
+                        <ui:SettingRow IsVisible="{Binding IsXess}">
+                          <TextBlock Classes="row-label" Text="{Binding Text.MotionSource}" />
+                          <ComboBox Classes="row-control" ItemsSource="{Binding XessMotionSources}" SelectedIndex="{Binding XessMotionSourceIndex, Mode=TwoWay}" AutomationProperties.Name="{Binding Text.MotionSource}">
+                            <ComboBox.ItemTemplate><DataTemplate x:DataType="vm:ChoiceItem"><TextBlock Text="{Binding Label}" /></DataTemplate></ComboBox.ItemTemplate>
+                          </ComboBox>
+                        </ui:SettingRow>
+                        <ui:SettingRow IsVisible="{Binding IsMsm}">
+                          <TextBlock Classes="row-label" Text="{Binding Text.MotionSource}" />
+                          <ComboBox Classes="row-control" ItemsSource="{Binding MsmSearches}" SelectedIndex="{Binding MsmSearchIndex, Mode=TwoWay}" AutomationProperties.Name="{Binding Text.MotionSource}">
+                            <ComboBox.ItemTemplate><DataTemplate x:DataType="vm:ChoiceItem"><TextBlock Text="{Binding Label}" /></DataTemplate></ComboBox.ItemTemplate>
+                          </ComboBox>
+                        </ui:SettingRow>
+                        <ui:SettingRow>
+                          <TextBlock Classes="row-label" Text="{Binding Text.StillPixels}" />
+                          <Border Classes="row-control"><ToggleButton Theme="{StaticResource ArmoSwitch}" IsChecked="{Binding StillPixelsEnabled, Mode=TwoWay}" HorizontalAlignment="Right" AutomationProperties.Name="{Binding Text.StillPixels}" /></Border>
+                        </ui:SettingRow>
+                        <ui:SettingRow>
+                          <TextBlock Classes="row-label" Text="{Binding Text.MotionGuard}" />
+                          <Border Classes="row-control"><ToggleButton Theme="{StaticResource ArmoSwitch}" IsChecked="{Binding MotionGuardEnabled, Mode=TwoWay}" HorizontalAlignment="Right" AutomationProperties.Name="{Binding Text.MotionGuard}" /></Border>
+                        </ui:SettingRow>
+                      </StackPanel>
+                    </Border>
+                    <Border Classes="group">
+                      <StackPanel Spacing="4">
+                        <TextBlock Classes="group-title" Text="{Binding Text.GroupCapture}" />
+                        <ui:SettingRow>
+                          <TextBlock Classes="row-label" Text="{Binding Text.CaptureApi}" />
+                          <ComboBox Classes="row-control" ItemsSource="{Binding CaptureApis}" SelectedIndex="{Binding CaptureApiIndex, Mode=TwoWay}" AutomationProperties.Name="{Binding Text.CaptureApi}" FlowDirection="LeftToRight" />
+                        </ui:SettingRow>
+                        <ui:SettingRow>
+                          <TextBlock Classes="row-label" Text="{Binding Text.WindowMode}" />
+                          <ComboBox Classes="row-control" ItemsSource="{Binding WindowModes}" SelectedIndex="{Binding WindowModeIndex, Mode=TwoWay}" IsEnabled="{Binding !IsMotionActive}" AutomationProperties.Name="{Binding Text.WindowMode}">
+                            <ComboBox.ItemTemplate><DataTemplate x:DataType="vm:ChoiceItem"><TextBlock Text="{Binding Label}" /></DataTemplate></ComboBox.ItemTemplate>
+                          </ComboBox>
+                        </ui:SettingRow>
+                        <ui:SettingRow>
+                          <TextBlock Classes="row-label" Text="{Binding Text.Countdown}" />
+                          <ComboBox Classes="row-control" ItemsSource="{Binding Countdowns}" SelectedIndex="{Binding CountdownIndex, Mode=TwoWay}" IsEnabled="{Binding !IsMotionActive}" AutomationProperties.Name="{Binding Text.Countdown}">
+                            <ComboBox.ItemTemplate><DataTemplate x:DataType="vm:ChoiceItem"><TextBlock Text="{Binding Label}" /></DataTemplate></ComboBox.ItemTemplate>
+                          </ComboBox>
+                        </ui:SettingRow>
+                        <ui:SettingRow>
+                          <TextBlock Classes="row-label" Text="{Binding Text.SpoutOutput}" />
+                          <Border Classes="row-control"><ToggleButton Theme="{StaticResource ArmoSwitch}" IsChecked="{Binding SpoutEnabled, Mode=TwoWay}" HorizontalAlignment="Right" AutomationProperties.Name="{Binding Text.SpoutOutput}" /></Border>
+                        </ui:SettingRow>
+                      </StackPanel>
+                    </Border>
+                    <Border Classes="group">
+                      <StackPanel Spacing="4">
+                        <TextBlock Classes="group-title" Text="{Binding Text.GroupGpu}" />
+                        <ui:SettingRow>
+                          <TextBlock Classes="row-label" Text="{Binding Text.PreferredGpu}" />
+                          <ComboBox Name="PreferredGpuBox" Classes="row-control" ItemsSource="{Binding GpuChoices}" SelectedIndex="{Binding GpuIndex, Mode=TwoWay}" IsEnabled="{Binding !IsMotionActive}" AutomationProperties.Name="{Binding Text.PreferredGpu}" FlowDirection="LeftToRight" />
+                        </ui:SettingRow>
+                        <ui:SettingRow>
+                          <TextBlock Classes="row-label" Text="{Binding Text.GpuPriority}" />
+                          <ComboBox Classes="row-control" ItemsSource="{Binding GpuPriorities}" SelectedIndex="{Binding GpuPriorityIndex, Mode=TwoWay}" AutomationProperties.Name="{Binding Text.GpuPriority}">
+                            <ComboBox.ItemTemplate><DataTemplate x:DataType="vm:ChoiceItem"><TextBlock Text="{Binding Label}" /></DataTemplate></ComboBox.ItemTemplate>
+                          </ComboBox>
+                        </ui:SettingRow>
+                      </StackPanel>
+                    </Border>
+                    <Border Classes="group">
+                      <StackPanel Spacing="4">
+                        <TextBlock Classes="group-title" Text="{Binding Text.Shortcut}" />
+                        <ui:SettingRow>
+                          <TextBlock Classes="row-label" Text="{Binding Text.FrameGeneration}" />
+                          <Button Name="ShortcutButton" Classes="row-control shortcut" Content="{Binding ShortcutLabel}" Command="{Binding ShortcutCommand}" AutomationProperties.Name="{Binding Text.Shortcut}" FlowDirection="LeftToRight" />
+                        </ui:SettingRow>
+                      </StackPanel>
+                    </Border>
+                  </ui:GroupFlow>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+          </Grid>
+          <Border Name="SupportCard" Classes="card" IsVisible="{Binding IsSupport}" VerticalAlignment="Top" Padding="28,40">
+            <StackPanel Spacing="22" HorizontalAlignment="Center" MaxWidth="620">
+              <TextBlock Text="{Binding Text.Support}" Classes="heading" HorizontalAlignment="Center" Margin="0" FontSize="24" />
+              <Button Name="SupportButton" Classes="primary support" Command="{Binding OpenLinkCommand}" CommandParameter="patreon" HorizontalAlignment="Stretch"
+                      ToolTip.Tip="https://www.patreon.com/cw/NODIXTECH/shop" AutomationProperties.Name="{Binding Text.SupportButton}">
+                <StackPanel Orientation="Horizontal" Spacing="14" HorizontalAlignment="Center">
+                  <Path Data="{StaticResource SupportIcon}" Fill="White" Width="26" Height="26" Stretch="Uniform" VerticalAlignment="Center" />
+                  <TextBlock Text="{Binding Text.SupportButton}" FontSize="22" FontWeight="SemiBold" VerticalAlignment="Center" TextWrapping="Wrap" />
+                </StackPanel>
+              </Button>
+              <Border Background="{DynamicResource SelectionBrush}" CornerRadius="14" Padding="24,20">
+                <StackPanel Spacing="12">
+                  <TextBlock Text="{Binding Text.SupportThanks}" FontSize="17" FontWeight="SemiBold" TextWrapping="Wrap" TextAlignment="Center" Foreground="{DynamicResource AccentBrush}" />
+                  <TextBlock Text="{Binding Text.SupportText1}" FontSize="14" TextWrapping="Wrap" TextAlignment="Center" LineHeight="22" />
+                  <TextBlock Text="{Binding Text.SupportText2}" FontSize="14" TextWrapping="Wrap" TextAlignment="Center" LineHeight="22" />
+                </StackPanel>
+              </Border>
+            </StackPanel>
+          </Border>
+          <Border Classes="card" IsVisible="{Binding IsSettings}" VerticalAlignment="Top">
+            <StackPanel Spacing="10">
+              <TextBlock Classes="heading" Text="{Binding Text.Settings}" Margin="0" />
+              <TextBlock Classes="muted" Text="{Binding Text.SettingsDescription}" Margin="0,0,0,6" />
+              <ui:SettingRow><TextBlock Classes="row-label" Text="{Binding Text.Language}" /><ComboBox Name="LanguageBox" Classes="row-control" ItemsSource="{Binding Languages}" SelectedIndex="{Binding LanguageIndex, Mode=TwoWay}" AutomationProperties.Name="{Binding Text.Language}" FlowDirection="LeftToRight" /></ui:SettingRow>
+              <ui:SettingRow>
+                <TextBlock Classes="row-label" Text="{Binding Text.Appearance}" />
+                <ComboBox Classes="row-control" ItemsSource="{Binding Themes}" SelectedIndex="{Binding ThemeIndex, Mode=TwoWay}" AutomationProperties.Name="{Binding Text.Appearance}">
+                  <ComboBox.ItemTemplate><DataTemplate x:DataType="vm:ChoiceItem"><TextBlock Text="{Binding Label}" /></DataTemplate></ComboBox.ItemTemplate>
+                </ComboBox>
+              </ui:SettingRow>
+              <ui:SettingRow>
+                <TextBlock Classes="row-label" Text="{Binding Text.Transparency}" />
+                <Border Classes="row-control"><ToggleButton Theme="{StaticResource ArmoSwitch}" IsChecked="{Binding TransparencyEnabled, Mode=TwoWay}" HorizontalAlignment="Right" AutomationProperties.Name="{Binding Text.Transparency}" /></Border>
+              </ui:SettingRow>
+              <TextBlock Classes="muted" Text="{Binding Text.TransparencyDescription}" />
+              <Border Height="1" Background="{DynamicResource LineBrush}" Margin="0,4" />
+              <ui:SettingRow>
+                <TextBlock Classes="row-label" Text="{Binding Text.StartWithWindows}" />
+                <Border Classes="row-control"><ToggleButton Theme="{StaticResource ArmoSwitch}" IsChecked="{Binding StartWithWindows, Mode=TwoWay}" HorizontalAlignment="Right" AutomationProperties.Name="{Binding Text.StartWithWindows}" /></Border>
+              </ui:SettingRow>
+              <TextBlock Classes="muted" Text="{Binding Text.StartupFailed}" IsVisible="{Binding HasStartupError}" Foreground="{DynamicResource AccentBrush}" />
+              <ui:SettingRow>
+                <TextBlock Classes="row-label" Text="{Binding Text.StartMinimized}" />
+                <Border Classes="row-control"><ToggleButton Theme="{StaticResource ArmoSwitch}" IsChecked="{Binding StartMinimized, Mode=TwoWay}" HorizontalAlignment="Right" AutomationProperties.Name="{Binding Text.StartMinimized}" /></Border>
+              </ui:SettingRow>
+              <ui:SettingRow>
+                <TextBlock Classes="row-label" Text="{Binding Text.MinimizeToTray}" />
+                <Border Classes="row-control"><ToggleButton Theme="{StaticResource ArmoSwitch}" IsChecked="{Binding MinimizeToTray, Mode=TwoWay}" HorizontalAlignment="Right" AutomationProperties.Name="{Binding Text.MinimizeToTray}" /></Border>
+              </ui:SettingRow>
+              <TextBlock Classes="muted" Text="{Binding Text.StartupDescription}" />
+              <Border Height="1" Background="{DynamicResource LineBrush}" Margin="0,4" />
+              <TextBlock Classes="row-label" Text="{Binding Text.AdaptiveLearning}" />
+              <TextBlock Classes="group-title" Text="{Binding Text.LearningCache}" />
+              <TextBlock Classes="muted" Text="{Binding Text.CacheEmpty}" IsVisible="{Binding NoLearnedGames}" />
+              <ItemsControl Name="LearnedList" ItemsSource="{Binding LearnedGames}" IsVisible="{Binding HasLearnedGames}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:LearnedItem">
+                    <Grid ColumnDefinitions="*,Auto" MinHeight="44">
+                      <StackPanel VerticalAlignment="Center" Margin="0,0,12,0">
+                        <TextBlock Text="{Binding Game}" FontSize="14" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" FlowDirection="LeftToRight" />
+                        <TextBlock Classes="muted" Text="{Binding Status}" />
+                      </StackPanel>
+                      <Button Grid.Column="1" Content="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).Text.DeleteCache}" Command="{Binding DeleteCommand}" VerticalAlignment="Center" AutomationProperties.Name="{Binding Game}" />
+                    </Grid>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </StackPanel>
+          </Border>
+          <Border Name="HelpCard" Classes="card" IsVisible="{Binding IsHelp}" VerticalAlignment="Top">
+            <StackPanel Spacing="14">
+              <TextBlock Classes="heading" Text="{Binding Text.HelpTitle}" Margin="0" />
+              <Border Name="HelpOfficial" Background="{DynamicResource SelectionBrush}" CornerRadius="12" Padding="16,12">
+                <StackPanel Spacing="8">
+                  <TextBlock Text="{Binding Text.HelpOfficial}" TextWrapping="Wrap" FontSize="14" FontWeight="SemiBold" />
+                  <TextBlock Classes="muted" Text="{Binding Text.HelpMaker}" />
+                  <WrapPanel Orientation="Horizontal">
+                    <Button Classes="link" Content="GitHub" Command="{Binding OpenLinkCommand}" CommandParameter="github" ToolTip.Tip="https://github.com/NODIX-TECH/MFG-SUPER-MOTION" />
+                    <Button Classes="link" Content="mfg-super-motion.com" Command="{Binding OpenLinkCommand}" CommandParameter="site" ToolTip.Tip="https://mfg-super-motion.com" />
+                    <Button Name="YoutubeButton" Classes="link primary" Content="YouTube · NODIX TECH" Command="{Binding OpenLinkCommand}" CommandParameter="youtube" ToolTip.Tip="https://www.youtube.com/@Nodix-Tech" />
+                  </WrapPanel>
+                </StackPanel>
+              </Border>
+              <TextBlock Text="{Binding Text.HelpDescription}" TextWrapping="Wrap" FontSize="14" />
+
+              <Border Height="1" Background="{DynamicResource LineBrush}" />
+              <TextBlock Classes="group-title" Text="{Binding Text.HelpStartTitle}" />
+              <TextBlock Text="{Binding Text.HelpStart}" TextWrapping="Wrap" FontSize="14" LineHeight="21" />
+
+              <Border Height="1" Background="{DynamicResource LineBrush}" />
+              <TextBlock Classes="group-title" Text="{Binding Text.HelpGeneratorsTitle}" />
+              <StackPanel Classes="help-item"><TextBlock Classes="help-name" Text="DLSS MFG" FlowDirection="LeftToRight" /><TextBlock Classes="muted" Text="{Binding Text.HelpDlss}" /></StackPanel>
+              <StackPanel Classes="help-item"><TextBlock Classes="help-name" Text="XeSS MFG" FlowDirection="LeftToRight" /><TextBlock Classes="muted" Text="{Binding Text.HelpXess}" /></StackPanel>
+              <StackPanel Classes="help-item"><TextBlock Classes="help-name" Text="SMFG" FlowDirection="LeftToRight" /><TextBlock Classes="muted" Text="{Binding Text.HelpMsm}" /></StackPanel>
+
+              <Border Height="1" Background="{DynamicResource LineBrush}" />
+              <TextBlock Classes="group-title" Text="{Binding Text.HelpOptionsTitle}" />
+              <StackPanel Classes="help-item"><TextBlock Classes="help-name" Text="{Binding Text.Mode}" /><TextBlock Classes="muted" Text="{Binding Text.HelpMode}" /></StackPanel>
+              <StackPanel Classes="help-item"><TextBlock Classes="help-name" Text="{Binding Text.GameType}" /><TextBlock Classes="muted" Text="{Binding Text.HelpGameType}" /></StackPanel>
+              <StackPanel Classes="help-item"><TextBlock Classes="help-name" Text="{Binding Text.AdaptiveLearning}" /><TextBlock Classes="muted" Text="{Binding Text.HelpAml}" /></StackPanel>
+              <StackPanel Classes="help-item"><TextBlock Classes="help-name" Text="{Binding Text.Upscaling}" /><TextBlock Classes="muted" Text="{Binding Text.HelpUpscaling}" /></StackPanel>
+              <StackPanel Classes="help-item"><TextBlock Classes="help-name" Text="{Binding Text.GroupPacing}" /><TextBlock Classes="muted" Text="{Binding Text.HelpPacing}" /></StackPanel>
+              <StackPanel Classes="help-item"><TextBlock Classes="help-name" Text="{Binding Text.Display}" /><TextBlock Classes="muted" Text="{Binding Text.HelpScreen}" /></StackPanel>
+              <StackPanel Classes="help-item"><TextBlock Classes="help-name" Text="{Binding Text.MotionSource}" /><TextBlock Classes="muted" Text="{Binding Text.HelpMotion}" /></StackPanel>
+              <StackPanel Classes="help-item"><TextBlock Classes="help-name" Text="{Binding Text.StillPixels}" /><TextBlock Classes="muted" Text="{Binding Text.HelpStill}" /></StackPanel>
+              <StackPanel Classes="help-item"><TextBlock Classes="help-name" Text="{Binding Text.GroupCapture}" /><TextBlock Classes="muted" Text="{Binding Text.HelpCapture}" /></StackPanel>
+              <StackPanel Classes="help-item"><TextBlock Classes="help-name" Text="{Binding Text.GroupGpu}" /><TextBlock Classes="muted" Text="{Binding Text.HelpGpu}" /></StackPanel>
+              <StackPanel Classes="help-item"><TextBlock Classes="help-name" Text="{Binding Text.FpsCounter}" /><TextBlock Classes="muted" Text="{Binding Text.HelpCounter}" /></StackPanel>
+
+              <Border Height="1" Background="{DynamicResource LineBrush}" />
+              <TextBlock Classes="group-title" Text="{Binding Text.HelpObsTitle}" />
+              <TextBlock Text="{Binding Text.HelpObs}" TextWrapping="Wrap" FontSize="14" LineHeight="21" />
+
+              <Border Height="1" Background="{DynamicResource LineBrush}" />
+              <TextBlock Classes="group-title" Text="{Binding Text.HelpTroubleTitle}" />
+              <TextBlock Text="{Binding Text.HelpTrouble}" TextWrapping="Wrap" FontSize="14" LineHeight="21" />
+
+              <Border Height="1" Background="{DynamicResource LineBrush}" />
+              <TextBlock Classes="group-title" Text="{Binding Text.HelpKeysTitle}" />
+              <TextBlock Text="{Binding Text.MotionHelp}" TextWrapping="Wrap" FontSize="14" />
+              <TextBlock Text="{Binding Text.ProfileHelp}" TextWrapping="Wrap" FontSize="14" />
+              <TextBlock Text="{Binding Text.SliderHelp}" TextWrapping="Wrap" FontSize="14" />
+              <TextBlock Text="{Binding Text.KeyboardHelp}" TextWrapping="Wrap" FontSize="14" />
+
+              <Border Height="1" Background="{DynamicResource LineBrush}" />
+              <TextBlock Classes="group-title" Text="{Binding Text.HelpLinksTitle}" />
+              <WrapPanel Name="HelpLinks" Orientation="Horizontal">
+                <Button Classes="link" Content="OBS Studio" Command="{Binding OpenLinkCommand}" CommandParameter="obs" ToolTip.Tip="https://obsproject.com/download" />
+                <Button Classes="link" Content="OBS Spout2 plugin" Command="{Binding OpenLinkCommand}" CommandParameter="obs-spout" ToolTip.Tip="https://github.com/Off-World-Live/obs-spout2-plugin/releases" />
+                <Button Classes="link" Content="Spout" Command="{Binding OpenLinkCommand}" CommandParameter="spout" ToolTip.Tip="https://spout.zeal.co/" />
+                <Button Classes="link" Content="{Binding NvidiaDrivers}" Command="{Binding OpenLinkCommand}" CommandParameter="nvidia" ToolTip.Tip="https://www.nvidia.com/en-us/drivers/" />
+                <Button Classes="link" Content="{Binding AmdDrivers}" Command="{Binding OpenLinkCommand}" CommandParameter="amd" ToolTip.Tip="https://www.amd.com/en/support/download/drivers.html" />
+                <Button Classes="link" Content="{Binding IntelDrivers}" Command="{Binding OpenLinkCommand}" CommandParameter="intel" ToolTip.Tip="https://www.intel.com/content/www/us/en/download-center/home.html" />
+                <Button Classes="link primary" Content="{Binding Text.SupportButton}" Command="{Binding OpenLinkCommand}" CommandParameter="patreon" ToolTip.Tip="https://www.patreon.com/cw/NODIXTECH/shop" />
+              </WrapPanel>
+            </StackPanel>
+          </Border>
+        </Panel>
+        </StackPanel>
+      </ScrollViewer>
+    </Grid>
+    <Border Background="#70000000" IsVisible="{Binding IsDialogOpen}">
+      <Border Classes="card" MaxWidth="480" Margin="24" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+        <StackPanel>
+          <StackPanel IsVisible="{Binding IsEditorOpen}" Spacing="10">
+            <TextBlock Text="{Binding DialogTitle}" FontSize="20" FontWeight="Bold" />
+            <TextBox Name="ProfileNameBox" Text="{Binding DraftName, Mode=TwoWay}" PlaceholderText="{Binding Text.ProfileName}" MaxLength="40" MinHeight="36" AutomationProperties.Name="{Binding Text.ProfileName}" />
+            <TextBlock Classes="muted" Text="{Binding Text.InvalidName}" IsVisible="{Binding IsNameInvalid}" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10"><Button Content="{Binding Text.Cancel}" Command="{Binding CancelCommand}" /><Button Classes="primary" Content="{Binding Text.Save}" Command="{Binding SaveCommand}" IsDefault="True" /></StackPanel>
+          </StackPanel>
+          <StackPanel Name="EngineGate" IsVisible="{Binding IsGateOpen}" Spacing="14">
+            <TextBlock Text="{Binding Text.EngineTitle}" FontSize="20" FontWeight="Bold" />
+            <TextBlock Name="EngineGateText" Text="{Binding GateText}" TextWrapping="Wrap" FontSize="14" />
+            <ProgressBar IsVisible="{Binding IsGateDownloading}" Minimum="0" Maximum="100" Value="{Binding GateProgress}" Height="8" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+              <Button Name="EngineSkip" Content="{Binding Text.Skip}" Command="{Binding GateSkipCommand}" IsVisible="{Binding CanGateSkip}" />
+              <Button Name="EngineDownload" Classes="primary" Content="{Binding GateActionText}" Command="{Binding GateDownloadCommand}" IsVisible="{Binding CanGateDownload}" />
+            </StackPanel>
+          </StackPanel>
+          <StackPanel IsVisible="{Binding IsDeleteOpen}" Spacing="12">
+            <TextBlock Text="{Binding Text.DeleteQuestion}" FontSize="20" TextWrapping="Wrap" />
+            <TextBlock Classes="muted" Text="{Binding SelectedProfile.Name}" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10"><Button Content="{Binding Text.Cancel}" Command="{Binding CancelCommand}" /><Button Classes="primary" Content="{Binding Text.Delete}" Command="{Binding ConfirmDeleteCommand}" /></StackPanel>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+    </Border>
+  </Grid>
+  </Border>
+</Window>
+

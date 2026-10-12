@@ -1,0 +1,64 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="ARMO.App"
+             RequestedThemeVariant="Light">
+  <Application.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+          <SolidColorBrush x:Key="CanvasBrush">#F2F5FA</SolidColorBrush>
+          <SolidColorBrush x:Key="WorkspaceBrush">#F2F5FA</SolidColorBrush>
+          <SolidColorBrush x:Key="SwitchTrackBrush">#E3E8EF</SolidColorBrush>
+          <SolidColorBrush x:Key="SwitchBorderBrush">#9BA4AF</SolidColorBrush>
+          <SolidColorBrush x:Key="ActiveSwitchKnobBrush">#111111</SolidColorBrush>
+          <SolidColorBrush x:Key="MaterialCanvasBrush">#E6F5F7FA</SolidColorBrush>
+          <SolidColorBrush x:Key="MaterialWorkspaceBrush">#EDF2F5FA</SolidColorBrush>
+          <SolidColorBrush x:Key="SurfaceBrush">#FCFDFF</SolidColorBrush>
+          <SolidColorBrush x:Key="InputBrush">#F5F8FC</SolidColorBrush>
+          <SolidColorBrush x:Key="TextBrush">#0B1528</SolidColorBrush>
+          <SolidColorBrush x:Key="MutedBrush">#7C879B</SolidColorBrush>
+          <SolidColorBrush x:Key="LineBrush">#D7DFEC</SolidColorBrush>
+          <SolidColorBrush x:Key="SelectionBrush">#DBEBFF</SolidColorBrush>
+          <SolidColorBrush x:Key="HoverBrush">#E8EFF9</SolidColorBrush>
+          <SolidColorBrush x:Key="TrackBrush">#DEE4EE</SolidColorBrush>
+          <SolidColorBrush x:Key="KnobBrush">#FFFFFF</SolidColorBrush>
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+          <SolidColorBrush x:Key="CanvasBrush">#1B2028</SolidColorBrush>
+          <SolidColorBrush x:Key="WorkspaceBrush">#272D38</SolidColorBrush>
+          <SolidColorBrush x:Key="SwitchTrackBrush">#333A46</SolidColorBrush>
+          <SolidColorBrush x:Key="SwitchBorderBrush">#A4A7AC</SolidColorBrush>
+          <SolidColorBrush x:Key="ActiveSwitchKnobBrush">#111111</SolidColorBrush>
+          <SolidColorBrush x:Key="MaterialCanvasBrush">#E61B2028</SolidColorBrush>
+          <SolidColorBrush x:Key="MaterialWorkspaceBrush">#ED272D38</SolidColorBrush>
+          <SolidColorBrush x:Key="SurfaceBrush">#323844</SolidColorBrush>
+          <SolidColorBrush x:Key="InputBrush">#3E444F</SolidColorBrush>
+          <SolidColorBrush x:Key="TextBrush">#F5F5F5</SolidColorBrush>
+          <SolidColorBrush x:Key="MutedBrush">#B5BCC6</SolidColorBrush>
+          <SolidColorBrush x:Key="LineBrush">#3C4350</SolidColorBrush>
+          <SolidColorBrush x:Key="SelectionBrush">#2A323C</SolidColorBrush>
+          <SolidColorBrush x:Key="HoverBrush">#37414B</SolidColorBrush>
+          <SolidColorBrush x:Key="TrackBrush">#7C828B</SolidColorBrush>
+          <SolidColorBrush x:Key="KnobBrush">#D3D5D8</SolidColorBrush>
+        </ResourceDictionary>
+      </ResourceDictionary.ThemeDictionaries>
+      <SolidColorBrush x:Key="AccentBrush">#1E9BFA</SolidColorBrush>
+      <SolidColorBrush x:Key="AccentHoverBrush">#40ABFC</SolidColorBrush>
+      <SolidColorBrush x:Key="AccentPressedBrush">#1686D9</SolidColorBrush>
+      <!-- The motion button while a window is being picked, and while frames are being made. -->
+      <SolidColorBrush x:Key="WaitingBrush">#F5A524</SolidColorBrush>
+      <SolidColorBrush x:Key="WaitingHoverBrush">#F7B84F</SolidColorBrush>
+      <SolidColorBrush x:Key="RunningBrush">#76B900</SolidColorBrush>
+      <SolidColorBrush x:Key="RunningHoverBrush">#88CC14</SolidColorBrush>
+      <SolidColorBrush x:Key="RunningPressedBrush">#679F00</SolidColorBrush>
+      <SolidColorBrush x:Key="OnSignalBrush">#0B1528</SolidColorBrush>
+      <Color x:Key="SystemAccentColor">#1E9BFA</Color>
+      <Color x:Key="SystemAccentColorLight1">#50AEFC</Color>
+      <Color x:Key="SystemAccentColorDark1">#1686D9</Color>
+    </ResourceDictionary>
+  </Application.Resources>
+  <Application.Styles>
+    <FluentTheme />
+    <StyleInclude Source="/Styles/Controls.axaml" />
+  </Application.Styles>
+</Application>

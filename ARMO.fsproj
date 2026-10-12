@@ -1,0 +1,116 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <!-- (Named here so that every restore - Visual Studio's too - also fetches what "Publish" needs for
+         Windows x64; without it Publish in Visual Studio failed with "unable to determine the cause".) -->
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+    <AssemblyName>Mfg Super Motion</AssemblyName>
+    <AssemblyTitle>MFG SUPER MOTION</AssemblyTitle>
+    <Product>MFG SUPER MOTION</Product>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\armo.ico</ApplicationIcon>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <Version>1.0.0</Version>
+    <Company>NODIX TECH</Company>
+    <RootNamespace>Mfg_Super_Motion</RootNamespace>
+    <Authors>NODIX TECH</Authors>
+    <Description>MFG SUPER MOTION built by NODIX TECH.</Description>
+    <Copyright>© 2026 NODIX TECH. All rights reserved.</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+    <EmbeddedResource Include="Localization\Translations\*.json" LogicalName="ARMO.Localization.%(Filename).json" />
+  </ItemGroup>
+
+  <!-- The native engine (Engine\build.cmd makes Engine\out): nvngx.dll is its
+       executable, the rest are the runtimes it loads. -->
+  <!-- (Not when publishing - WithoutEngine in the publish profile: the published app has no engine in it. It
+       downloads the engine the first time it is opened, from the engine's own releases, and newer ones later:
+       Infrastructure\Updates.fs. In a build folder the engine beside the program is the one that is used.) -->
+  <ItemGroup Condition="'$(WithoutEngine)' != 'true'">
+    <Content Include="..\Engine\out\**\*" Exclude="..\Engine\out\**\*.log" Link="Engine\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+  </ItemGroup>
+
+  <!-- A fresh checkout has no Engine\out yet: build it once, then take its files. -->
+  <Target Name="BuildMotionEngine" BeforeTargets="AssignTargetPaths" Condition="!Exists('..\Engine\out\nvngx.dll') And '$(WithoutEngine)' != 'true'">
+    <Exec Command="&quot;$(MSBuildThisFileDirectory)..\Engine\build.cmd&quot;" ContinueOnError="true" />
+    <Warning Condition="!Exists('..\Engine\out\nvngx.dll')" Text="The native engine was not built (Engine\build.cmd needs Visual Studio 2022 with C++). START MOTION will report missing engine files." />
+    <ItemGroup>
+      <Content Include="..\Engine\out\**\*" Exclude="..\Engine\out\**\*.log" Link="Engine\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+    </ItemGroup>
+  </Target>
+
+  <!-- After "Publish": the installer, made of the folder just published (Installer\MfgSuperMotion.iss, Inno
+       Setup 6), into SetupDir - the publish profile says where. Inno Setup's compiler is looked for where it
+       says it is installed, then in its usual places; -p:InnoSetupCompiler=<ISCC.exe> names it outright, and
+       -p:MakeInstaller=false leaves the installer out. -->
+  <Target Name="MakeInstaller" AfterTargets="Publish" Condition="'$(MakeInstaller)' != 'false' And '$(SetupDir)' != ''">
+    <PropertyGroup>
+      <InnoSetupFolder Condition="'$(InnoSetupFolder)' == ''">$([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Inno Setup 6_is1', 'InstallLocation', null, RegistryView.Registry32, RegistryView.Registry64))</InnoSetupFolder>
+      <InnoSetupFolder Condition="'$(InnoSetupFolder)' == ''">$([MSBuild]::GetRegistryValueFromView('HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Inno Setup 6_is1', 'InstallLocation', null, RegistryView.Registry32, RegistryView.Registry64))</InnoSetupFolder>
+      <InnoSetupCompiler Condition="'$(InnoSetupCompiler)' == '' And '$(InnoSetupFolder)' != '' And Exists('$(InnoSetupFolder)ISCC.exe')">$(InnoSetupFolder)ISCC.exe</InnoSetupCompiler>
+      <InnoSetupCompiler Condition="'$(InnoSetupCompiler)' == '' And Exists('$(MSBuildProgramFiles32)\Inno Setup 6\ISCC.exe')">$(MSBuildProgramFiles32)\Inno Setup 6\ISCC.exe</InnoSetupCompiler>
+      <InnoSetupCompiler Condition="'$(InnoSetupCompiler)' == '' And Exists('E:\Inno Setup 6\ISCC.exe')">E:\Inno Setup 6\ISCC.exe</InnoSetupCompiler>
+      <PublishedFolder>$(PublishDir.TrimEnd('\'))</PublishedFolder>
+      <SetupFolder>$(SetupDir.TrimEnd('\'))</SetupFolder>
+    </PropertyGroup>
+    <!-- (Debug files of the drawing libraries come along with their packages: not for a user's disk.) -->
+    <ItemGroup>
+      <PublishedDebugFile Include="$(PublishedFolder)\**\*.pdb" />
+    </ItemGroup>
+    <Delete Files="@(PublishedDebugFile)" />
+    <Error Condition="!Exists('$(PublishedFolder)\$(AssemblyName).exe')" Text="The published folder is not whole ($(PublishedFolder)): the program is missing. No installer was made." />
+
+    <!-- The engine, for its own releases page: Engine\out as it is, in a zip named by Engine\version.txt. The
+         release it is attached to carries that version as its tag (1.0.0): the app compares the tag with what it
+         has, and downloads the zip. -->
+    <PropertyGroup>
+      <EngineVersion>$([System.IO.File]::ReadAllText('$(MSBuildThisFileDirectory)..\Engine\version.txt').Trim())</EngineVersion>
+      <EngineZip>$(SetupFolder)\SUPER-MOTION-Engine-$(EngineVersion).zip</EngineZip>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(MSBuildThisFileDirectory)..\Engine\out\nvngx.dll')" Text="Engine\out has no engine: run Engine\build.cmd first." />
+    <MakeDir Directories="$(SetupFolder)" />
+    <ZipDirectory SourceDirectory="$(MSBuildThisFileDirectory)..\Engine\out" DestinationFile="$(EngineZip)" Overwrite="true" />
+    <Message Importance="high" Text="Engine:    $(EngineZip)  (attach it to a release tagged $(EngineVersion) at https://github.com/olivo-software/SUPER-MOTION/releases)" />
+    <Warning Condition="'$(InnoSetupCompiler)' == ''" Text="Inno Setup 6 was not found: the app is published, the installer was not made. Install Inno Setup, or pass -p:InnoSetupCompiler=&lt;path to ISCC.exe&gt;." />
+    <MakeDir Condition="'$(InnoSetupCompiler)' != ''" Directories="$(SetupFolder)" />
+    <Exec Condition="'$(InnoSetupCompiler)' != ''" Command="&quot;$(InnoSetupCompiler)&quot; /Qp &quot;/DPublishDir=$(PublishedFolder)&quot; &quot;/DSetupDir=$(SetupFolder)&quot; /DAppVersion=$(Version) &quot;$(MSBuildThisFileDirectory)..\Installer\MfgSuperMotion.iss&quot;" />
+    <Message Condition="'$(InnoSetupCompiler)' != ''" Importance="high" Text="Installer: $(SetupFolder)\MFG-SUPER-MOTION-Setup-$(Version).exe" />
+  </Target>
+
+  <ItemGroup>
+    <Compile Include="Localization\Languages.fs" />
+    <Compile Include="Localization\UiText.fs" />
+    <Compile Include="Models\UiMetrics.fs" />
+    <Compile Include="Models\Preferences.fs" />
+    <Compile Include="Infrastructure\AppData.fs" />
+    <Compile Include="Infrastructure\StateStore.fs" />
+    <Compile Include="Infrastructure\AsyncCache.fs" />
+    <Compile Include="Infrastructure\WindowsBackdrop.fs" />
+    <Compile Include="Infrastructure\StartupRegistration.fs" />
+    <Compile Include="Infrastructure\Updates.fs" />
+    <Compile Include="Infrastructure\MotionEngine.fs" />
+    <Compile Include="Infrastructure\GlobalHotkey.fs" />
+    <Compile Include="ViewModels\ViewModelBase.fs" />
+    <Compile Include="ViewModels\MainViewModel.fs" />
+    <Compile Include="Controls\SettingRow.fs" />
+    <Compile Include="Controls\GroupFlow.fs" />
+    <Compile Include="Views\MainWindow.axaml.fs" />
+    <Compile Include="Views\TrayController.fs" />
+    <Compile Include="App.axaml.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="12.1.0" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.1.0" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.0" />
+    <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.3">
+      <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
+      <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+  </ItemGroup>
+</Project>
