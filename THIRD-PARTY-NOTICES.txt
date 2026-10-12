@@ -1,0 +1,157 @@
+MFG SUPER MOTION
+THIRD-PARTY NOTICES
+
+Copyright (c) 2026 NODIX-TECH
+
+
+======================================================================
+IMPORTANT NOTICE
+======================================================================
+
+MFG SUPER MOTION contains original software developed by NODIX-TECH and
+may also use, interact with, reference, link against, dynamically load,
+adapt or depend upon software and technologies created by independent
+third parties.
+
+The PolyForm Strict License 1.0.0 covering original NODIX-TECH portions
+of MFG SUPER MOTION does NOT apply to third-party material.
+
+Each third-party component remains governed by its own copyright,
+license and distribution terms.
+
+Nothing in this repository transfers ownership of third-party intellectual
+property to NODIX-TECH.
+
+
+======================================================================
+NVIDIA
+======================================================================
+
+Vendor:
+NVIDIA Corporation
+
+MFG SUPER MOTION may use or interoperate with NVIDIA GPU technologies,
+APIs, SDK interfaces, runtimes, drivers and related components.
+
+This may include NVIDIA Optical Flow and other NVIDIA GPU functionality
+where supported by the project.
+
+NVIDIA, GeForce, RTX, CUDA, NVIDIA Optical Flow and related product and
+technology names are trademarks and/or property of their respective
+owners.
+
+Any NVIDIA-owned software, SDK component, header, API, runtime, driver
+component or binary remains subject to its applicable NVIDIA license and
+distribution terms.
+
+NVIDIA-owned material is NOT licensed under the MFG SUPER MOTION
+PolyForm Strict License.
+
+MFG SUPER MOTION is an independent project and is not affiliated with,
+sponsored by, endorsed by, certified by, or an official product of
+NVIDIA Corporation.
+
+
+======================================================================
+INTEL
+======================================================================
+
+Vendor:
+Intel Corporation
+
+MFG SUPER MOTION may use or interoperate with Intel GPU technologies,
+APIs, SDK interfaces, runtimes, drivers and related components.
+
+Intel and related product, software and technology names and marks remain
+the property of their respective owners.
+
+Any Intel-owned software, SDK component, header, API, runtime, driver
+component or binary remains subject to its applicable Intel license and
+distribution terms.
+
+Intel-owned material is NOT licensed under the MFG SUPER MOTION
+PolyForm Strict License.
+
+MFG SUPER MOTION is an independent project and is not affiliated with,
+sponsored by, endorsed by, certified by, or an official product of
+Intel Corporation.
+
+
+======================================================================
+OTHER THIRD-PARTY COMPONENTS
+======================================================================
+
+MFG SUPER MOTION may also use additional third-party software including,
+but not limited to:
+
+- Open-source libraries
+- Source-available libraries
+- Graphics and GPU APIs
+- SDK interfaces
+- Runtime libraries
+- Header libraries
+- Build dependencies
+- Utility libraries
+- Operating-system components
+- Driver-provided components
+
+Each component remains subject to its original copyright and license.
+
+Where an applicable third-party license requires preservation of a
+copyright notice, license text, attribution, source notice, modification
+notice or other information, that requirement must be preserved.
+
+
+======================================================================
+MIXED OR ADAPTED CODE
+======================================================================
+
+Where third-party source code has been used or adapted inside
+MFG SUPER MOTION, copyright in the original third-party portions remains
+with the applicable upstream copyright holder.
+
+NODIX-TECH may own copyright in independently created modifications,
+additions or surrounding implementation only to the extent permitted by
+the applicable upstream license.
+
+The PolyForm Strict License must not be interpreted as replacing or
+overriding an upstream third-party license.
+
+
+======================================================================
+TRADEMARKS
+======================================================================
+
+All third-party company names, project names, product names, technologies,
+logos and trademarks remain the property of their respective owners.
+
+Their appearance in this repository is for technical identification,
+compatibility and attribution purposes.
+
+No endorsement, sponsorship, certification, partnership or affiliation
+is implied.
+
+
+======================================================================
+REPORTING ATTRIBUTION ISSUES
+======================================================================
+
+NODIX-TECH intends to preserve applicable third-party copyright and
+licensing information.
+
+If a copyright holder or project maintainer believes that attribution or
+license information in this repository is incomplete or inaccurate,
+please open an issue in the official MFG SUPER MOTION repository so the
+matter can be reviewed and corrected.
+
+
+======================================================================
+FINAL NOTICE
+======================================================================
+
+NODIX-TECH claims copyright only over original portions of
+MFG SUPER MOTION created by NODIX-TECH.
+
+Third-party works remain the property of their respective owners.
+
+Copyright (c) 2026 NODIX-TECH.
