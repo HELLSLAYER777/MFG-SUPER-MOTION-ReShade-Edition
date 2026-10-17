@@ -126,6 +126,7 @@ type MainViewModel(store: StateStore, startupRegistration: IStartupRegistration)
     let post (action: unit -> unit) = if isNull ui then action () else ui.Post((fun _ -> action ()), null)
     let engine = new MotionEngine()
     let hotkey = new GlobalHotkey()
+    let reshade = new ReShadeBridge()
     let mutable engineStatus = EngineStatus.idle
     let mutable disposed = false
     // "Preferred GPU" and "Generator" go by each other: the cards offered are the ones the picked generator can
@@ -221,6 +222,8 @@ type MainViewModel(store: StateStore, startupRegistration: IStartupRegistration)
         if engine.IsActive then engine.Stop()
         else
             engine.SetTexts(studyTexts ())
+            // (An engine update replaces the engine's folder: ReShade is put back before the engine starts.)
+            ReShadeFiles.ensureInstalled ()
             engine.Start selected.Options |> ignore
     let effectiveHotkey () =
         if hotkeyValue = 0 then Preferences.defaultHotkey elif hotkeyValue < 0 then 0 else hotkeyValue
@@ -352,6 +355,35 @@ type MainViewModel(store: StateStore, startupRegistration: IStartupRegistration)
         this.CancelDialog())
     let resetCommand = RelayCommand(fun () -> updateOptions (fun _ -> Preferences.defaultOptions))
     let retrySaveCommand = RelayCommand(fun () -> store.Flush())
+    // ---- ReShade overlay (Infrastructure\ReShadeBridge.fs) ----------------------------------
+    // ReShade lives inside the engine's process; the bridge hands it the overlay key and the mouse.
+    let mutable reshadeEnabled = ReShadeSettings.enabled ()
+    let mutable reshadeSource = ""
+    let mutable reshadeStatus = ReShadeFiles.status ()
+    let applyReShade () = if reshadeEnabled then reshade.Start() else reshade.Stop()
+    let finishReShade (turnOn: bool) (outcome: Result<string, string>) =
+        post (fun () ->
+            if not disposed then
+                match outcome with
+                | Ok message ->
+                    reshadeStatus <- message
+                    if turnOn then
+                        reshadeEnabled <- true
+                        ReShadeSettings.save true
+                        applyReShade ()
+                | Error message -> reshadeStatus <- message
+                notify [ "ReShadeEnabled"; "ReShadeStatus" ])
+    let installReShadeCommand =
+        RelayCommand(fun () ->
+            let source = reshadeSource
+            reshadeStatus <- "Installing..."
+            notify [ "ReShadeStatus" ]
+            ThreadPool.QueueUserWorkItem(fun _ -> finishReShade true (ReShadeFiles.install source)) |> ignore)
+    let uninstallReShadeCommand =
+        RelayCommand(fun () ->
+            reshadeStatus <- "Removing..."
+            notify [ "ReShadeStatus" ]
+            ThreadPool.QueueUserWorkItem(fun _ -> finishReShade false (ReShadeFiles.uninstall ())) |> ignore)
     let motionCommand = RelayCommand(toggleMotion)
     let shortcutCommand = RelayCommand(fun () -> this.BeginShortcutCapture())
 
@@ -368,6 +400,7 @@ type MainViewModel(store: StateStore, startupRegistration: IStartupRegistration)
                     if further && page = "settings" then refreshLearned ()))
         hotkey.Pressed.Add(fun () -> post (fun () -> if not disposed && not capturingHotkey then toggleMotion ()))
         hotkey.Set(effectiveHotkey ())
+        applyReShade ()
         // The engine lists the cards; asked off the window's thread, the page is told when the answer is in.
         ThreadPool.QueueUserWorkItem(fun _ ->
             let listed = engine.Cards()
@@ -626,6 +659,20 @@ type MainViewModel(store: StateStore, startupRegistration: IStartupRegistration)
         else ""
     member _.HasStatusNote = this.StatusNote <> ""
     member _.MotionCommand = motionCommand
+    member _.ReShadeEnabled
+        with get () = reshadeEnabled
+        and set (value: bool) =
+            if reshadeEnabled <> value then
+                reshadeEnabled <- value
+                ReShadeSettings.save value
+                applyReShade ()
+                notify [ "ReShadeEnabled" ]
+    member _.ReShadeSource
+        with get () = reshadeSource
+        and set (value: string) = reshadeSource <- (if isNull value then "" else value)
+    member _.ReShadeStatus = reshadeStatus
+    member _.InstallReShadeCommand = installReShadeCommand
+    member _.UninstallReShadeCommand = uninstallReShadeCommand
 
     // The shortcut: pressed in the window while it is being picked, system-wide afterwards.
     member _.ShortcutLabel =
@@ -723,5 +770,6 @@ type MainViewModel(store: StateStore, startupRegistration: IStartupRegistration)
             disposed <- true
             sendTimer.Dispose()
             (hotkey :> IDisposable).Dispose()
+            (reshade :> IDisposable).Dispose()
             (engine :> IDisposable).Dispose()
             (store :> IDisposable).Dispose()
