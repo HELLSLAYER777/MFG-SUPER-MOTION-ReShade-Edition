@@ -1,0 +1,34 @@
+name: Build MFG SUPER MOTION
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:      # also lets you press "Run workflow" by hand
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      # Compile first, on its own, so any F# / XAML error is easy to find in the log.
+      # WithoutEngine: the native engine (Engine\build.cmd) is a separate project; the app downloads it itself.
+      - name: Build
+        run: dotnet build ARMO.fsproj -c Release -p:WithoutEngine=true
+
+      # Same settings as Properties\PublishProfiles\FolderProfile.pubxml, minus the Inno Setup installer.
+      - name: Publish (win-x64, self-contained)
+        run: >
+          dotnet publish ARMO.fsproj -c Release -r win-x64 --self-contained true
+          -p:WithoutEngine=true -p:MakeInstaller=false -p:PublishReadyToRun=true
+          -p:DebugType=none -p:DebugSymbols=false -p:SatelliteResourceLanguages=en
+          -o publish
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MFG-SUPER-MOTION-win-x64
+          path: publish
