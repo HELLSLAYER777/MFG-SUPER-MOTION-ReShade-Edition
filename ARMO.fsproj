@@ -93,6 +93,7 @@
     <Compile Include="Infrastructure\Updates.fs" />
     <Compile Include="Infrastructure\MotionEngine.fs" />
     <Compile Include="Infrastructure\GlobalHotkey.fs" />
+    <Compile Include="Infrastructure\ReShadeBridge.fs" />
     <Compile Include="ViewModels\ViewModelBase.fs" />
     <Compile Include="ViewModels\MainViewModel.fs" />
     <Compile Include="Controls\SettingRow.fs" />
