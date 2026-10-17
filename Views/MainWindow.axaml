@@ -267,6 +267,21 @@
                         </ui:SettingRow>
                       </StackPanel>
                     </Border>
+                    <Border Classes="group">
+                      <StackPanel Spacing="8">
+                        <TextBlock Classes="group-title" Text="ReShade" />
+                        <ui:SettingRow>
+                          <TextBlock Classes="row-label" Text="Overlay (Home key)" />
+                          <Border Classes="row-control"><ToggleButton Theme="{StaticResource ArmoSwitch}" IsChecked="{Binding ReShadeEnabled, Mode=TwoWay}" HorizontalAlignment="Right" AutomationProperties.Name="ReShade overlay" /></Border>
+                        </ui:SettingRow>
+                        <TextBlock Text="{Binding ReShadeStatus}" TextWrapping="Wrap" Opacity="0.7" />
+                        <TextBox Text="{Binding ReShadeSource, Mode=TwoWay}" PlaceholderText="Folder with a ReShade install, or ReShade_Setup.exe" MinHeight="36" AutomationProperties.Name="ReShade source" />
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+                          <Button Content="Uninstall" Command="{Binding UninstallReShadeCommand}" IsEnabled="{Binding !IsMotionActive}" />
+                          <Button Classes="primary" Content="Install / update" Command="{Binding InstallReShadeCommand}" IsEnabled="{Binding !IsMotionActive}" />
+                        </StackPanel>
+                      </StackPanel>
+                    </Border>
                   </ui:GroupFlow>
                 </StackPanel>
               </StackPanel>
